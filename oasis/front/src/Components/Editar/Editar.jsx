@@ -1,57 +1,93 @@
-import React, { useState } from "react";
-import Axios from "axios";
-import { Button, Grid, Container} from "@mui/material";
-
-const Crear = () => {
-  const [name, setName] = useState("");
-  const [seniority, setSeniority] = useState("");
-  const [mainStack, setMainStack] = useState("");
-  const [skills, setSkills] = useState("");
-  const [location, setLocation] = useState("");
-  const [rate, setRate] = useState('');
-  const [english, setEnglish] = useState('');
-  const [fechaPresentacion, setFechaPresentacion] = useState('');
-  const [empresa, setEmpresa] = useState('');
-  const [experiencia, setExperiencia] = useState('');
-  const [gmail, setGmail] = useState('');
-  const [linkedin, setLinkedin] = useState('');
+import React, {useState, useEffect } from 'react'
+import Axios from 'axios'
+import { Button, Grid, Container} from '@mui/material'
+import { useParams } from 'react-router-dom'
 
 
-  //call mongoose api to create user with name, seniority, main stack, skills, location, rate, english and remote
-  const createUser = () => {
-    Axios.post("/users/register", {
-      name: name,
-      seniority: seniority,
-      mainStack: mainStack,
-      skills: skills,
-      location: location,
-      rate: rate,
-      english: english,
-      fechaPresentacion: fechaPresentacion,
-      empresa: empresa,
-      experiencia: experiencia,
-      gmail: gmail,
-      linkedin: linkedin
-      
-      
-    })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+const Editar = () => {
+    const {id} = useParams();
+    const [name, setName] = useState("");
+    const [seniority, setSeniority] = useState("");
+    const [mainStack, setMainStack] = useState("");
+    const [skills, setSkills] = useState("");
+    const [location, setLocation] = useState("");
+    const [rate, setRate] = useState("");
+    const [english, setEnglish] = useState("");
+    const [fechaPresentacion, setFechaPresentacion] = useState('');
+    const [empresa, setEmpresa] = useState('');
+    const [experiencia, setExperiencia] = useState('');
+    const [gmail, setGmail] = useState('');
+    const [linkedin, setLinkedin] = useState('');
 
-  console.log(name)
+    console.log(id)
+
+    //get user from db with id
+    const getUser = () => {
+        Axios.get(`/users/${id}`)
+        .then((res) => {
+            setName(res.data.name);
+            setSeniority(res.data.seniority);
+            setMainStack(res.data.mainStack);
+            setSkills(res.data.skills);
+            setLocation(res.data.location);
+            setRate(res.data.rate);
+            setEnglish(res.data.english);
+            setFechaPresentacion(res.data.fechaPresentacion);
+            setEmpresa(res.data.empresa);
+            setExperiencia(res.data.experiencia);
+            setGmail(res.data.gmail);
+            setLinkedin(res.data.linkedin);
+        }
+        )
+        .catch((err) => {
+            console.log(err);
+        }
+        )
+    }
+
+    useEffect(() => {
+        getUser();
+    }
+    , [])
+
+    //call mongoose api to update user with name, seniority, main stack, skills, location, rate, english and remote
+    const updateUser = () => {
+        Axios.put(`/users/${id}`, {
+            name: name,
+            seniority: seniority,
+            mainStack: mainStack,
+            skills: skills,
+            location: location,
+            rate: rate,
+            english: english,
+            fechaPresentacion: fechaPresentacion,
+            empresa: empresa,
+            experiencia: experiencia,
+            gmail: gmail,
+            linkedin: linkedin,
+            
+        })
+        .then((res) => {
+            console.log(res);
+        }
+        )
+        .catch((err) => {
+            console.log(err);
+        }
+        )
+    }
+
+
+   
+
   return (
     <>
         <Container>
       <Grid >
         <Grid item xs={12} >
-          <h1>Crear</h1>
+          <h1>Editar</h1>
           <div style={{display: 'flex', flexDirection: 'column'}}> 
-        <label>NOMBRE</label>
+          <label>NOMBRE</label>
           <input
             type="text"
             name="name"
@@ -138,13 +174,12 @@ const Crear = () => {
             />
 
             </div>
-            
-          <Button onClick={createUser}>Crear </Button>
+          <Button onClick={updateUser}>Crear </Button>
         </Grid>
       </Grid>
         </Container>
     </>
-  );
-};
+  )
+}
 
-export default Crear;
+export default Editar

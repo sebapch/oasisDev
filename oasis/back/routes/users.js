@@ -14,7 +14,12 @@ router.post("/register", async (req, res) => {
         location,
         rate,
         english,
-        remote,
+        fechaPresentacion,
+        empresa,
+        experiencia,
+        gmail,
+        linkedin
+
     } = req.body;
     //push user to database
     const newUser = new User({
@@ -25,7 +30,11 @@ router.post("/register", async (req, res) => {
         location,
         rate,
         english,
-        remote,
+        fechaPresentacion,
+        empresa,
+        experiencia,
+        gmail,
+        linkedin
     });
     try {
         const savedUser = await newUser.save();
@@ -36,6 +45,76 @@ router.post("/register", async (req, res) => {
     
 }
 );
+
+
+router.get("/", async (req, res) => {
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+}
+);
+
+//brings selected user from db to edit
+router.get("/:id", async (req, res) => {
+    const { id } = req.params
+    try {
+        const user = await User.findById(id);
+        res.json(user);
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+}
+);
+
+//put edited user in db
+router.put("/:id", async (req, res) => {
+    const { id } = req.params
+    let {
+        name,
+        seniority,
+        mainStack,
+        skills,
+        location,
+        rate,
+        english,
+        remote,
+    } = req.body;
+    try {
+        const user = await User.findByIdAndUpdate(id, {
+            name,
+            seniority,
+            mainStack,
+            skills,
+            location,
+            rate,
+            english,
+            remote,
+        });
+        res.json(user);
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+}
+);
+
+//deletes user from database
+router.delete("/:id", async (req, res) => {
+    const { id } = req.params
+    try {
+        const user = await User.findByIdAndDelete(id);
+        res.json(user);
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+}
+);
+
+
+
+
 
 
 module.exports = router;

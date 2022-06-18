@@ -30,7 +30,19 @@ const userSchema = new mongoose.Schema({
   english: {
     type: String
   },
-  remoto: {
+  fechaPresentacion: {
+    type: String
+  },
+  empresa: {
+    type: String
+  },
+  experiencia: {
+    type: String
+  },
+  gmail: {
+    type: String
+  },
+  linkedin: {
     type: String
   },
 },{
