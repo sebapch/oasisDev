@@ -1,13 +1,14 @@
 import MUIDataTable from "mui-datatables";
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Axios from "axios";
 import { Link } from "react-router-dom";
-import { ThemeProvider } from "@mui/material/styles";
-import { createTheme } from "@mui/material/styles";
-import InputLabel from "@mui/material/InputLabel";
 import { Button } from "@mui/material";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
+import DarkMode from '../../DarkMode.jsx'
+import './AdminTable.css';
+
+
 
 const muiCache = createCache({
   key: "mui-datatables",
@@ -15,9 +16,12 @@ const muiCache = createCache({
 });
 
 const AdminTable = () => {
+  const [selected, isSelected] = useState('green');
+  
+
   const columns = [
     { name: "Name", options: { filterOptions: { fullWidth: true } } },
-    "Seniority",
+    { name: "seniority", id: "test" },
     "Stack Principal",
     "Skills",
     "Location",
@@ -48,16 +52,22 @@ const AdminTable = () => {
   }
 
 
+
+
+
   return (
     <>
       
         <CacheProvider value={muiCache}>
-          <ThemeProvider theme={createTheme()}>
             <Link to={"/create"}>
-              <Button>Create User</Button>
+              <Button variant="contained" color="secondary">Create User</Button>
             </Link>
+            <DarkMode />
+            
             <MUIDataTable
+
               title={"OASIS"}
+              
               data={users.map((user) => {
                 return [
                   user.name,
@@ -70,17 +80,26 @@ const AdminTable = () => {
                   user.fechaPresentacion,
                   user.empresa,
                   user.experiencia,
-                  
-
+                  <>
+                  <select name="estado" className="select">
+                    <option value="red" id='red' style={{backgroundColor: 'red'}}>red</option>
+                    <option value="yellow" id='yellow'>yellow</option>
+                    <option value="green" id='green' style={{backgroundColor: 'green'}}>green</option>
+                    <option value="gray" id='gray' style={{backgroundColor: 'gray'}}>gray</option>
+                  </select>
                   <Link to={`/edit/${user._id}`}>
-                    <Button>Edit</Button>
-                    <Button onClick={() => { deleteUser(user._id); } }>Delete</Button>
-                  </Link>,
+                    <Button variant="contained" color="secondary">Edit</Button>
+                    <Button variant="contained" color="error" onClick={() => { deleteUser(user._id); } }>Delete</Button>
+                  </Link>
+                  </>,
+                  
                 ];
               })}
               columns={columns}
+              theme='dark'
+              
             />
-          </ThemeProvider>
+            
         </CacheProvider>
       
     </>
